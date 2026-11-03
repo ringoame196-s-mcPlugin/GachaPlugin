@@ -1,5 +1,6 @@
 package com.github.ringoame196
 
+import com.github.ringoame196.commands.GachaCommand
 import com.github.ringoame196.events.Events
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -23,9 +24,8 @@ class Main : JavaPlugin() {
         server.pluginManager.registerEvents(Events(), plugin)
     }
 
-    @Suppress("UnusedPrivateMember")
     private fun registerCommands() {
-        // getCommand("sample")?.setExecutor(SampleCommand())
+        getCommand("gacha")?.setExecutor(GachaCommand())
     }
 
     override fun onDisable() {

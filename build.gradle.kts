@@ -136,12 +136,21 @@ bukkit {
     apiVersion = "1." + minecraftVersion.split(".")[1]
     author = "ringoame196"
     website = "https://github.com/ringoame196-s-mcPlugin"
-    description = "Minecraft plugin template"
+    description = "ガチャポンプラグイン"
 
     permissions {
-        register("${project.name}.op") {
-            description = "op権限"
+        register("${project.name}.admin") {
+            description = "${project.name}'s AdminPermission"
             default = BukkitPluginDescription.Permission.Default.OP
+        }
+    }
+
+    commands {
+        register("gacha") {
+            description = "ガチャポンの管理するためのコマンド"
+            permission = "${project.name}.admin"
+            usage = "/gacha <set,remove>"
+
         }
     }
 }
