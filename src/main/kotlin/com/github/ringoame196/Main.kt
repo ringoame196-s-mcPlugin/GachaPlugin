@@ -2,6 +2,7 @@ package com.github.ringoame196
 
 import com.github.ringoame196.commands.GachaCommand
 import com.github.ringoame196.events.Events
+import com.github.ringoame196.message.MessageManager
 import org.bukkit.plugin.java.JavaPlugin
 
 class Main : JavaPlugin() {
@@ -15,6 +16,9 @@ class Main : JavaPlugin() {
         plugin = this
         super.onEnable()
         logger.info("${description.name} が有効化されました！")
+
+        @Suppress("UnusedPrivateMember")
+        val messageManager = MessageManager(plugin)
 
         registerEvents()
         registerCommands()
