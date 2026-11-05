@@ -6,4 +6,5 @@ import org.bukkit.inventory.ItemStack
 data class GachaBlock(
     val container: Container,
     val currencyItem: ItemStack?,
+    val isShouldConsume: Boolean,
 )

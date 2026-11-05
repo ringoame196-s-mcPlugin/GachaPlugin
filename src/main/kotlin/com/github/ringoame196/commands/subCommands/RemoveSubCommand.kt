@@ -18,7 +18,7 @@ class RemoveSubCommand : SubCommand {
         }
         val targetBlock = GachaBlockManager.getTargetBlock(sender) ?: return
 
-        if (!GachaBlockManager.isGachaBlock(targetBlock)) {
+        if (!GachaBlockManager.gachaBlocks.contains(targetBlock)) {
             val message = "登録されていません"
             sender.sendMessage(message)
             return

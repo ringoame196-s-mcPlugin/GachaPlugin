@@ -11,6 +11,11 @@ import org.bukkit.inventory.ItemStack
 class SetSubCommand : SubCommand {
     override val name: String = "set"
 
+    companion object {
+        private const val SHOULD_CONSUME_TAB_NUMBER = 0
+        private const val SHOULD_CONSUME_DISPLAY_TAB_NUMBER = 1
+    }
+
     override fun execute(
         sender: CommandSender,
         args: Array<out String>,
@@ -22,20 +27,22 @@ class SetSubCommand : SubCommand {
         val item = sender.inventory.itemInMainHand
         val targetBlock = GachaBlockManager.getTargetBlock(sender) ?: return
 
-        if (GachaBlockManager.isGachaBlock(targetBlock)) {
+        if (GachaBlockManager.gachaBlocks.contains(targetBlock)) {
             val message = "既に追加済です"
             sender.sendMessage(message)
             return
         }
 
-        val currencyItem =
-            if (item.type == Material.AIR) {
-                null
+        val currencyItem = item.takeIf { it.type != Material.AIR }
+
+        val isShouldConsume: Boolean =
+            if (args.isEmpty()) {
+                false
             } else {
-                item
+                args[SHOULD_CONSUME_TAB_NUMBER].toBooleanStrictOrNull() ?: false
             }
 
-        val gachaBlock = GachaBlock(targetBlock, currencyItem)
+        val gachaBlock = GachaBlock(targetBlock, currencyItem, isShouldConsume)
 
         GachaBlockManager.addGachaBlock(gachaBlock)
 
@@ -55,8 +62,9 @@ class SetSubCommand : SubCommand {
         } else {
             currencyItemInfo = "未設定"
         }
+        val isShouldConsume = gachaBlock.isShouldConsume
 
-        val message = "ガチャ追加完了\n通貨アイテム：$currencyItemInfo"
+        val message = "ガチャ追加完了\n通貨アイテム：$currencyItemInfo\n消費：$isShouldConsume"
         player.sendMessage(message)
     }
 
@@ -65,5 +73,14 @@ class SetSubCommand : SubCommand {
             currencyItem.itemMeta.displayName
         } else {
             currencyItem.type.name
+        }
+
+    override fun tabComplete(
+        sender: CommandSender,
+        args: Array<out String>,
+    ): List<String> =
+        when (args.size) {
+            SHOULD_CONSUME_DISPLAY_TAB_NUMBER -> mutableListOf("true", "false")
+            else -> mutableListOf()
         }
 }
