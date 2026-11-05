@@ -1,20 +1,15 @@
 package com.github.ringoame196.commands.subCommands
 
-import com.github.ringoame196.commands.GachaBlock
-import com.github.ringoame196.commands.GachaBlockManager
+import com.github.ringoame196.GachaBlock
+import com.github.ringoame196.GachaBlockManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
-import org.bukkit.block.Container
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
 class SetSubCommand : SubCommand {
     override val name: String = "set"
-
-    companion object {
-        const val MAX_DISTANCE = 10
-    }
 
     override fun execute(
         sender: CommandSender,
@@ -25,7 +20,7 @@ class SetSubCommand : SubCommand {
             return
         }
         val item = sender.inventory.itemInMainHand
-        val targetBlock = getTargetBlock(sender) ?: return
+        val targetBlock = GachaBlockManager.getTargetBlock(sender) ?: return
 
         if (GachaBlockManager.isGachaBlock(targetBlock)) {
             val message = "既に追加済です"
@@ -45,24 +40,6 @@ class SetSubCommand : SubCommand {
         GachaBlockManager.addGachaBlock(gachaBlock)
 
         sendAddMessage(sender, gachaBlock)
-    }
-
-    private fun getTargetBlock(player: Player): Container? {
-        val targetBlock = player.getTargetBlockExact(MAX_DISTANCE)
-
-        if (targetBlock == null) {
-            val message = "ブロックを指定してください"
-            player.sendMessage(message)
-            return null
-        }
-
-        val state = targetBlock.state
-        if (state !is Container) {
-            val message = "コンテナブロックのみ追加可能です"
-            player.sendMessage(message)
-            return null
-        }
-        return state
     }
 
     private fun sendAddMessage(
