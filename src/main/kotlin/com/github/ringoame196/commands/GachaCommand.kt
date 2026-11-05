@@ -1,5 +1,6 @@
 package com.github.ringoame196.commands
 
+import com.github.ringoame196.commands.subCommands.OpenSubCommand
 import com.github.ringoame196.commands.subCommands.RemoveSubCommand
 import com.github.ringoame196.commands.subCommands.SetSubCommand
 import com.github.ringoame196.commands.subCommands.SubCommand
@@ -8,7 +9,11 @@ import org.bukkit.command.CommandSender
 
 class GachaCommand : BaseCommand() {
     override val subCommands: Map<String, SubCommand> =
-        listOf(SetSubCommand(), RemoveSubCommand()).associateBy {
+        listOf(
+            SetSubCommand(),
+            RemoveSubCommand(),
+            OpenSubCommand(),
+        ).associateBy {
             it.name
         }
 
