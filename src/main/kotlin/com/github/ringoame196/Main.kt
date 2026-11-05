@@ -21,15 +21,15 @@ class Main : JavaPlugin() {
         val messageManager = MessageManager(plugin)
 
         registerEvents()
-        registerCommands()
+        registerCommands(messageManager)
     }
 
     private fun registerEvents() {
         server.pluginManager.registerEvents(Events(), plugin)
     }
 
-    private fun registerCommands() {
-        getCommand("gacha")?.setExecutor(GachaCommand())
+    private fun registerCommands(messageManager: MessageManager) {
+        getCommand("gacha")?.setExecutor(GachaCommand(messageManager))
     }
 
     override fun onDisable() {

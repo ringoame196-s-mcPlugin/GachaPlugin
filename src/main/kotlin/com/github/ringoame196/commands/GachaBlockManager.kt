@@ -1,11 +1,13 @@
 package com.github.ringoame196.commands
 
+import org.bukkit.block.Container
+
 object GachaBlockManager {
-    private val gachaBlockList = mutableListOf<GachaBlock>()
+    private val gachaBlockMap = mutableMapOf<Container, GachaBlock>()
 
     fun addGachaBlock(gachaBlock: GachaBlock) {
-        gachaBlockList.add(gachaBlock)
+        gachaBlockMap[gachaBlock.container] = gachaBlock
     }
 
-    fun isGachaBlock(gachaBlock: GachaBlock): Boolean = gachaBlockList.contains(gachaBlock)
+    fun isGachaBlock(container: Container): Boolean = gachaBlockMap.keys.contains(container)
 }
