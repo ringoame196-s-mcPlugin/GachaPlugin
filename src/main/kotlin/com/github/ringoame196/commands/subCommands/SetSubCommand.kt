@@ -35,12 +35,7 @@ class SetSubCommand : SubCommand {
 
         val currencyItem = item.takeIf { it.type != Material.AIR }
 
-        val isShouldConsume: Boolean =
-            if (args.isEmpty()) {
-                false
-            } else {
-                args[SHOULD_CONSUME_TAB_NUMBER].toBooleanStrictOrNull() ?: false
-            }
+        val isShouldConsume = args.getOrNull(SHOULD_CONSUME_TAB_NUMBER)?.toBooleanStrictOrNull() ?: false
 
         val gachaBlock = GachaBlock(targetBlock, currencyItem, isShouldConsume)
 
