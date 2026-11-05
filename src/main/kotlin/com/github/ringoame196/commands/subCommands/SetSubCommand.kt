@@ -28,12 +28,7 @@ class SetSubCommand : SubCommand {
             return
         }
 
-        val currencyItem =
-            if (item.type == Material.AIR) {
-                null
-            } else {
-                item
-            }
+        val currencyItem = item.takeIf { it.type != Material.AIR }
 
         val gachaBlock = GachaBlock(targetBlock, currencyItem)
 
