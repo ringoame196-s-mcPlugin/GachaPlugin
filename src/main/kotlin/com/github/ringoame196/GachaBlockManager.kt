@@ -6,6 +6,7 @@ import org.bukkit.entity.Player
 object GachaBlockManager {
     private val gachaBlockMap = mutableMapOf<Container, GachaBlock>()
     private const val MAX_DISTANCE = 10
+    val gachaBlocks get() = gachaBlockMap.keys.toSet()
 
     fun addGachaBlock(gachaBlock: GachaBlock) {
         gachaBlockMap[gachaBlock.container] = gachaBlock
@@ -14,8 +15,6 @@ object GachaBlockManager {
     fun removeGachaBlock(targetBlock: Container) {
         gachaBlockMap.remove(targetBlock)
     }
-
-    fun isGachaBlock(container: Container): Boolean = gachaBlockMap.keys.contains(container)
 
     fun getTargetBlock(player: Player): Container? {
         val targetBlock = player.getTargetBlockExact(MAX_DISTANCE)

@@ -22,7 +22,7 @@ class SetSubCommand : SubCommand {
         val item = sender.inventory.itemInMainHand
         val targetBlock = GachaBlockManager.getTargetBlock(sender) ?: return
 
-        if (GachaBlockManager.isGachaBlock(targetBlock)) {
+        if (GachaBlockManager.gachaBlocks.contains(targetBlock)) {
             val message = "既に追加済です"
             sender.sendMessage(message)
             return
