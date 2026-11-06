@@ -1,12 +1,17 @@
 package com.github.ringoame196.events
 
+import com.github.ringoame196.GachaBlock
 import com.github.ringoame196.GachaBlockManager
-import com.github.ringoame196.InventoryManager
+import com.github.ringoame196.GachaponInventoryManager
+import com.github.ringoame196.ViewGachaponInventory
 import org.bukkit.block.Container
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerInteractEvent
 
 class Events : Listener {
@@ -28,9 +33,32 @@ class Events : Listener {
                 val message = "通貨アイテムは設定されていません"
                 player.sendMessage(message)
             } else {
-                InventoryManager.openView(player, gachaBlock)
+                openViewInventory(player, gachaBlock)
             }
         }
+    }
+
+    private fun openViewInventory(
+        player: Player,
+        gachaBlock: GachaBlock,
+    ) {
+        val viewInventory = ViewGachaponInventory(gachaBlock)
+        val inv = viewInventory.makeInventory()
+        player.openInventory(inv)
+        GachaponInventoryManager.addGachaponInventory(inv, viewInventory)
+    }
+
+    @EventHandler
+    fun onInventoryClick(e: InventoryClickEvent) {
+        val inventory = e.clickedInventory ?: return
+        val gachaponInventory = GachaponInventoryManager.getGachaponInventory(inventory) ?: return
+        gachaponInventory.onInventoryClickEvent(e)
+    }
+
+    @EventHandler
+    fun onInventoryClose(e: InventoryCloseEvent) {
+        val inventory = e.inventory
+        GachaponInventoryManager.removeGachaponInventory(inventory)
     }
 
     @EventHandler
