@@ -15,10 +15,11 @@ val sharedProps = Properties().apply {
     }
 }
 
-val deployPath = sharedProps.getProperty("deployPath")
-val serverIp = sharedProps.getProperty("serverIp")
-val serverPort = sharedProps.getProperty("serverPort")
-
+private val deployPath = sharedProps.getProperty("deployPath")
+private val privateKeyPath = sharedProps.getProperty("privateKeyPath")
+private val serverIp = sharedProps.getProperty("serverIp")
+private val serverPort = sharedProps.getProperty("serverPort")
+private val serverUser = sharedProps.getProperty("serverUser")
 plugins {
     kotlin("jvm") version "2.0.20"
     id("com.gradleup.shadow") version "8.3.7"
@@ -57,6 +58,75 @@ tasks.withType<ShadowJar> {
     relocate("org.jetbrains.annotations", "${project.group}.libs.org.jetbrains.annotations")
 }
 
+fun Logger.scpJarToTarget(
+    jarFile: File,
+    serverUser: String,
+    serverIp: String,
+    sshKeyPath: String,
+    remoteDir: String
+): Boolean {
+    if (!jarFile.exists()) {
+        error("転送対象のJARファイルが見つかりません: ${jarFile.path}")
+        return false
+    }
+
+    val remoteDestination = "$serverUser@$serverIp:$remoteDir"
+    lifecycle("SCPでリモートサーバーへ転送中: ${jarFile.name} -> $remoteDestination")
+
+    try {
+        val process = ProcessBuilder(
+            "scp",
+            "-i", sshKeyPath,
+            "-o", "StrictHostKeyChecking=no",
+            jarFile.absolutePath,
+            remoteDestination
+        )
+            .redirectErrorStream(true)
+            .start()
+
+        val output = process.inputStream.bufferedReader().use { it.readText() }
+        val exitCode = process.waitFor()
+
+        if (exitCode == 0) {
+            lifecycle("SCP転送が成功しました！")
+            return true
+        } else {
+            error("SCP転送に失敗しました (Exit code: $exitCode):\n$output")
+            return false
+        }
+    } catch (e: Exception) {
+        error("SCP実行中にエラーが発生しました: ${e.message}")
+        return false
+    }
+}
+
+fun Logger.notifyServerApi(serverIp: String, serverPort: String, projectName: String) {
+    val port = serverPort.toInt()
+    val apiUrl = "http://$serverIp:$port/plugin?name=$projectName"
+
+    try {
+        val connection = (URL(apiUrl).openConnection() as HttpURLConnection).apply {
+            connectTimeout = 2000
+            readTimeout = 2000
+            requestMethod = "GET"
+        }
+
+        if (connection.responseCode == HttpURLConnection.HTTP_OK) {
+            val response = connection.inputStream.bufferedReader().use { it.readText() }
+            lifecycle("API Response: $response")
+        } else {
+            warn("Server responded with error code: ${connection.responseCode}")
+        }
+        connection.disconnect()
+    } catch (e: java.net.ConnectException) {
+        warn("Warning: サーバーに接続できません（オフラインの可能性があります）")
+    } catch (e: java.net.SocketTimeoutException) {
+        warn("Warning: 接続がタイムアウトしました")
+    } catch (e: Exception) {
+        warn("Warning: API通信で予期しないエラーが発生しました: ${e.message}")
+    }
+}
+
 // 自動デプロイタスク（JARコピー & サーバーAPI通知）
 val deployPlugin by tasks.registering {
     group = "deployment"
@@ -70,7 +140,6 @@ val deployPlugin by tasks.registering {
     } else {
         deployPath ?: layout.buildDirectory.dir("dummy").get().asFile.path
     }
-    val targetDir = file(copyDirPath)
 
     doLast {
         if (deployPath.isNullOrBlank() || serverIp.isNullOrBlank() || serverPort.isNullOrBlank()) {
@@ -83,47 +152,13 @@ val deployPlugin by tasks.registering {
             return@doLast
         }
 
-        if (!targetDir.exists() || !targetDir.isDirectory) {
-            logger.warn("自動コピーをスキップしました: ディレクトリが存在しません (${targetDir.path})")
-            return@doLast
-        }
-
         val jarFile = layout.buildDirectory.file("libs/${project.name}.jar").get().asFile
-        if (jarFile.exists()) {
-            copy {
-                from(jarFile)
-                into(targetDir)
-            }
-            logger.lifecycle("プラグインをコピーしました: ${jarFile.name} -> ${targetDir.path}")
-        } else {
-            logger.error("コピー対象のJARファイルが見つかりません: ${jarFile.path}")
+        val copySuccess = logger.scpJarToTarget(jarFile,serverUser,serverIp,privateKeyPath,deployPath)
+        if (!copySuccess) {
             return@doLast
         }
 
-        val port = serverPort.toInt()
-        val apiUrl = "http://$serverIp:$port/plugin?name=${project.name}"
-
-        try {
-            val connection = (URL(apiUrl).openConnection() as HttpURLConnection).apply {
-                connectTimeout = 2000
-                readTimeout = 2000
-                requestMethod = "GET"
-            }
-
-            if (connection.responseCode == HttpURLConnection.HTTP_OK) {
-                val response = connection.inputStream.bufferedReader().use { it.readText() }
-                logger.lifecycle("API Response: $response")
-            } else {
-                logger.warn("Server responded with error code: ${connection.responseCode}")
-            }
-            connection.disconnect()
-        } catch (e: java.net.ConnectException) {
-            logger.warn("Warning: サーバーに接続できません（オフラインの可能性があります）")
-        } catch (e: java.net.SocketTimeoutException) {
-            logger.warn("Warning: 接続がタイムアウトしました")
-        } catch (e: Exception) {
-            logger.warn("Warning: API通信で予期しないエラーが発生しました: ${e.message}")
-        }
+        logger.notifyServerApi(serverIp, serverPort, project.name)
     }
 }
 
@@ -139,7 +174,7 @@ bukkit {
     description = "ガチャポンプラグイン"
 
     permissions {
-        register("${project.name}.admin") {
+        register("gacha_plugin.admin") {
             description = "${project.name}'s AdminPermission"
             default = BukkitPluginDescription.Permission.Default.OP
         }
