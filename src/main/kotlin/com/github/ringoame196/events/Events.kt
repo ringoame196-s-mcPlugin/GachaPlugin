@@ -5,6 +5,7 @@ import org.bukkit.block.Container
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
+import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.player.PlayerInteractEvent
 
 class Events : Listener {
@@ -22,5 +23,17 @@ class Events : Listener {
         if (!player.isSneaking) {
             GachaBlockManager.roll(player, gachaBlock)
         }
+    }
+
+    @EventHandler
+    fun blockBreak(e: BlockBreakEvent) {
+        val player = e.player
+        val block = e.block
+        val container = block.state as? Container ?: return
+        if (!GachaBlockManager.gachaBlocks.contains(container)) return
+        e.isCancelled = true
+
+        val message = "ガチャブロックを壊すことは阻止されています"
+        player.sendMessage(message)
     }
 }
