@@ -1,6 +1,7 @@
 package com.github.ringoame196.events
 
 import com.github.ringoame196.GachaBlockManager
+import com.github.ringoame196.InventoryManager
 import org.bukkit.block.Container
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -22,6 +23,13 @@ class Events : Listener {
         e.isCancelled = true
         if (!player.isSneaking) {
             GachaBlockManager.roll(player, gachaBlock)
+        } else {
+            if (gachaBlock.currencyItem == null) {
+                val message = "通貨アイテムは設定されていません"
+                player.sendMessage(message)
+            } else {
+                InventoryManager.openView(player, gachaBlock)
+            }
         }
     }
 
