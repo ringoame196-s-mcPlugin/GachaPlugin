@@ -184,7 +184,7 @@ bukkit {
         register("gacha") {
             description = "ガチャポンの管理するためのコマンド"
             permission = "${project.name}.admin"
-            usage = "/gacha <set,remove>"
+            usage = "/gacha <add,remove.open> (<true,false>)"
 
         }
     }
