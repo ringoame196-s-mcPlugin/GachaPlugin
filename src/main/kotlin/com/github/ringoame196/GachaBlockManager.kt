@@ -1,5 +1,6 @@
 package com.github.ringoame196
 
+import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.block.Container
 import org.bukkit.entity.Player
@@ -23,15 +24,15 @@ object GachaBlockManager {
         val targetBlock = player.getTargetBlockExact(MAX_DISTANCE)
 
         if (targetBlock == null) {
-            val message = "ブロックを指定してください"
-            player.sendMessage(message)
+            val message = "${ChatColor.RED}ブロックを指定してください"
+            EffectManager.sendErrorMessage(player, message)
             return null
         }
 
         val state = targetBlock.state
         if (state !is Container) {
-            val message = "コンテナブロックのみ追加可能です"
-            player.sendMessage(message)
+            val message = "${ChatColor.RED}コンテナブロックのみ追加可能です"
+            EffectManager.sendErrorMessage(player, message)
             return null
         }
         return state
@@ -47,8 +48,8 @@ object GachaBlockManager {
         val currentItem = gachaBlock.currencyItem
 
         if (!isRoll(item, currentItem)) {
-            val message = "消費アイテムが必要です"
-            player.sendMessage(message)
+            val message = "${ChatColor.RED}消費アイテムが必要です"
+            EffectManager.sendErrorMessage(player, message)
             return
         }
 
@@ -56,8 +57,8 @@ object GachaBlockManager {
         val randomItem = getRandomItem(container)
 
         if (randomItem == null) {
-            val message = "出せるアイテムがありませんでした"
-            player.sendMessage(message)
+            val message = "${ChatColor.RED}出せるアイテムがありませんでした"
+            EffectManager.sendErrorMessage(player, message)
             return
         }
 
@@ -66,6 +67,7 @@ object GachaBlockManager {
         if (gachaBlock.isShouldConsume) {
             removeGachaBlockItem(container, randomItem)
         }
+        EffectManager.playRoll(player)
         player.inventory.addItem(randomItem)
     }
 

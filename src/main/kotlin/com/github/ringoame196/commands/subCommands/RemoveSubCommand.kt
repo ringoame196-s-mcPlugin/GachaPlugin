@@ -1,5 +1,6 @@
 package com.github.ringoame196.commands.subCommands
 
+import com.github.ringoame196.EffectManager
 import com.github.ringoame196.GachaBlockManager
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
@@ -19,13 +20,17 @@ class RemoveSubCommand : SubCommand {
         val targetBlock = GachaBlockManager.getTargetBlock(sender) ?: return
 
         if (!GachaBlockManager.gachaBlocks.contains(targetBlock)) {
-            val message = "登録されていません"
-            sender.sendMessage(message)
+            val message = "${ChatColor.RED}登録されていません"
+            EffectManager.sendErrorMessage(sender, message)
             return
         }
-
         GachaBlockManager.removeGachaBlock(targetBlock)
+
+        sendRemoveMessage(sender)
+    }
+
+    private fun sendRemoveMessage(player: Player) {
         val message = "ガチャブロックを削除しました"
-        sender.sendMessage(message)
+        EffectManager.sendSetMessage(player, message)
     }
 }

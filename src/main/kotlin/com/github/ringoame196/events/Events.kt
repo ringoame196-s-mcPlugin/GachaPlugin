@@ -1,9 +1,11 @@
 package com.github.ringoame196.events
 
+import com.github.ringoame196.EffectManager
 import com.github.ringoame196.GachaBlock
 import com.github.ringoame196.GachaBlockManager
 import com.github.ringoame196.GachaponInventoryManager
 import com.github.ringoame196.ViewGachaponInventory
+import org.bukkit.ChatColor
 import org.bukkit.block.Container
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -69,7 +71,7 @@ class Events : Listener {
         if (!GachaBlockManager.gachaBlocks.contains(container)) return
         e.isCancelled = true
 
-        val message = "ガチャブロックを壊すことは阻止されています"
-        player.sendMessage(message)
+        val message = "${ChatColor.RED}ガチャブロックを壊すことは阻止されています"
+        EffectManager.sendErrorMessage(player, message)
     }
 }
