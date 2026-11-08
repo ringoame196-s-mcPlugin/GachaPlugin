@@ -67,6 +67,7 @@ object GachaBlockManager {
         if (gachaBlock.isShouldConsume) {
             removeGachaBlockItem(container, randomItem)
         }
+        EffectManager.playRoll(player)
         player.inventory.addItem(randomItem)
     }
 

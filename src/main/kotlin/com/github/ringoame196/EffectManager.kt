@@ -6,6 +6,7 @@ import org.bukkit.entity.Player
 object EffectManager {
     private val ERROR_SOUND = Sound.BLOCK_NOTE_BLOCK_BELL
     private val SET_SOUND = Sound.BLOCK_ANVIL_USE
+    private val ROLL_SOUND = Sound.ENTITY_ARROW_SHOOT
 
     fun sendErrorMessage(
         player: Player,
@@ -28,5 +29,9 @@ object EffectManager {
     ) {
         player.sendMessage(message)
         player.playSound(player, sound, 1f, 1f)
+    }
+
+    fun playRoll(player: Player) {
+        player.playSound(player, ROLL_SOUND, 1f, 1f)
     }
 }
