@@ -36,13 +36,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      # --- 📦 Gradle環境のセットアップ（バージョン明示によるタイムアウト対策） ---
-      - name: Setup Gradle
-        if: steps.filter.outputs.kotlin == 'true'
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '9.3.0'
+          cache: gradle
 
       - name: Grant execute permission
         if: steps.filter.outputs.kotlin == 'true'
@@ -111,9 +105,11 @@ jobs:
           ```
           """
 
+          # 本命（高上限・爆速） + 予備1（高上限） + 予備2（超高安定）
           models_to_try = [
-              'gemini-2.5-flash',
-              'gemini-1.5-flash'
+              'gemini-3.5-flash-lite',
+              'gemini-3.1-flash-lite',
+              'gemini-2.5-flash'
           ]
 
           for model_name in models_to_try:
@@ -132,7 +128,7 @@ jobs:
                   continue
           EOF
 
-          # 4. 正常にレビューテキストが生成された場合のみコメント投稿
+          # 4. 正常にレビューテキストが生成された場合（🤖が含まれる場合）のみコメント投稿
           if grep -q "🤖 Gemini AI ひとくちレビュー" review.txt; then
             gh pr comment $PR_NUMBER --body-file review.txt
           else
