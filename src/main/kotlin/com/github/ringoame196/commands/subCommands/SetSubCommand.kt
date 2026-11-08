@@ -1,5 +1,6 @@
 package com.github.ringoame196.commands.subCommands
 
+import com.github.ringoame196.EffectManager
 import com.github.ringoame196.GachaBlock
 import com.github.ringoame196.GachaBlockManager
 import org.bukkit.ChatColor
@@ -28,8 +29,8 @@ class SetSubCommand : SubCommand {
         val targetBlock = GachaBlockManager.getTargetBlock(sender) ?: return
 
         if (GachaBlockManager.gachaBlocks.contains(targetBlock)) {
-            val message = "既に追加済です"
-            sender.sendMessage(message)
+            val message = "${ChatColor.RED}既に追加済です"
+            EffectManager.sendErrorMessage(sender, message)
             return
         }
 
