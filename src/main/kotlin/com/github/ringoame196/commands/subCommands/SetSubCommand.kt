@@ -60,8 +60,8 @@ class SetSubCommand : SubCommand {
         }
         val isShouldConsume = gachaBlock.isShouldConsume
 
-        val message = "ガチャ追加完了\n通貨アイテム：$currencyItemInfo\n消費：$isShouldConsume"
-        player.sendMessage(message)
+        val message = "${ChatColor.GOLD}ガチャ追加完了\n${ChatColor.AQUA}通貨アイテム：$currencyItemInfo\n消費：$isShouldConsume"
+        EffectManager.sendSetMessage(player, message)
     }
 
     private fun getCurrencyItemName(currencyItem: ItemStack): String =

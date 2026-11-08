@@ -24,9 +24,13 @@ class RemoveSubCommand : SubCommand {
             EffectManager.sendErrorMessage(sender, message)
             return
         }
-
         GachaBlockManager.removeGachaBlock(targetBlock)
+
+        sendRemoveMessage(sender)
+    }
+
+    private fun sendRemoveMessage(player: Player) {
         val message = "ガチャブロックを削除しました"
-        sender.sendMessage(message)
+        EffectManager.sendSetMessage(player, message)
     }
 }
