@@ -36,12 +36,13 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          # ※ setup-gradle を使うため、ここでは cache: gradle を行いません
 
-      # --- 📦 Gradle環境のセットアップ（タイムアウト対策・キャッシュ最適化） ---
+      # --- 📦 Gradle環境のセットアップ（バージョン明示によるタイムアウト対策） ---
       - name: Setup Gradle
         if: steps.filter.outputs.kotlin == 'true'
         uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.3.0'
 
       - name: Grant execute permission
         if: steps.filter.outputs.kotlin == 'true'
