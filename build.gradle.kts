@@ -36,9 +36,11 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
 }
 
+val sqliteVersion = "3.46.1.0"
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$minecraftVersion-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.xerial:sqlite-jdbc:$sqliteVersion") // SQLite
 }
 
 detekt {
