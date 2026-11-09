@@ -14,6 +14,7 @@ object GachaBlockManager {
 
     fun addGachaBlock(gachaBlock: GachaBlock) {
         gachaBlockMap[gachaBlock.container] = gachaBlock
+        GachaDBManager.add(gachaBlock)
     }
 
     fun removeGachaBlock(targetBlock: Container) {
