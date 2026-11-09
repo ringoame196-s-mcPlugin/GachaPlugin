@@ -19,6 +19,7 @@ class Main : JavaPlugin() {
 
         @Suppress("UnusedPrivateMember")
         val messageManager = MessageManager(plugin)
+        GachaDBManager.init(plugin)
 
         registerEvents()
         registerCommands()
