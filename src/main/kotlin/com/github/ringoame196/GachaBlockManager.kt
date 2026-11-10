@@ -17,8 +17,13 @@ object GachaBlockManager {
         GachaDBManager.add(gachaBlock)
     }
 
+    fun addData(gachaBlock: GachaBlock) {
+        gachaBlockMap[gachaBlock.container] = gachaBlock
+    }
+
     fun removeGachaBlock(targetBlock: Container) {
         gachaBlockMap.remove(targetBlock)
+        GachaDBManager.remove(targetBlock)
     }
 
     fun getTargetBlock(player: Player): Container? {

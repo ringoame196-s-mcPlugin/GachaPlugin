@@ -1,5 +1,8 @@
 package com.github.ringoame196
 
+import org.bukkit.Bukkit
+import org.bukkit.Location
+import org.bukkit.block.Container
 import org.bukkit.plugin.Plugin
 
 object GachaDBManager {
@@ -58,6 +61,40 @@ object GachaDBManager {
                     isShouldConsume,
                 ),
             )
+        }
+    }
+
+    fun remove(targetBlock: Container) {
+        val location = targetBlock.location
+        val worldName = location.world.name
+        val x = location.x
+        val y = location.y
+        val z = location.z
+        val sql = "DELETE FROM $TABLE_NAME WHERE $WORLD_NAME_KEY = ? AND $X_KEY = ? AND $Y_KEY = ? AND $Z_KEY =?;"
+        dataBaseManager.executeUpdate(sql, listOf(worldName, x, y, z))
+    }
+
+    fun loadDB() {
+        val sql = "SELECT * FROM $TABLE_NAME"
+        dataBaseManager.query(sql) { rows ->
+            rows.forEach { row ->
+                val worldName = row[WORLD_NAME_KEY] as String
+                val x = row[X_KEY] as Int
+                val y = row[Y_KEY] as Int
+                val z = row[Z_KEY] as Int
+                val curryItemBase64 = row[CURRY_ITEM_KEY] as String?
+                val isShouldConsume = row[SHOULD_CONSUME_KEY] as? Boolean ?: false
+                val curryItem = curryItemBase64?.let { ItemStackSerializer.itemStackFromBase64(it) }
+
+                val world = Bukkit.getWorld(worldName)
+                val loc = Location(world, x.toDouble(), y.toDouble(), z.toDouble())
+
+                val block = loc.block
+                val state = block.state as? Container ?: return@query
+                val gachaBlock = GachaBlock(state, curryItem, isShouldConsume)
+
+                GachaBlockManager.addData(gachaBlock)
+            }
         }
     }
 }
