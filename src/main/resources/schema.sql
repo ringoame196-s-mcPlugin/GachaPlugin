@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS "gacha_data" (
     "x" INTEGER NOT NULL,
     "y" INTEGER NOT NULL,
     "z" INTEGER NOT NULL,
-    "currency_item" TEXT NOT NULL,
+    "currency_item" TEXT NULL,
     "should_consume" BOOLEAN NULL,
     PRIMARY KEY("world_name","x","y","z")
 )
