@@ -23,10 +23,6 @@ object GachaDBManager {
 
     fun add(gachaBlock: GachaBlock) {
         val location = gachaBlock.container.location
-        val worldName = location.world.name
-        val x = location.x
-        val y = location.y
-        val z = location.z
         val curryItem = gachaBlock.currencyItem
         val isShouldConsume = gachaBlock.isShouldConsume
         if (curryItem != null) {
@@ -38,10 +34,10 @@ object GachaDBManager {
             dataBaseManager.executeUpdate(
                 sql,
                 listOf(
-                    worldName,
-                    x,
-                    y,
-                    z,
+                    location.world.name,
+                    location.x,
+                    location.y,
+                    location.z,
                     curryItemInfo,
                     isShouldConsume,
                 ),
@@ -54,10 +50,10 @@ object GachaDBManager {
             dataBaseManager.executeUpdate(
                 sql,
                 listOf(
-                    worldName,
-                    x,
-                    y,
-                    z,
+                    location.world.name,
+                    location.x,
+                    location.y,
+                    location.z,
                     isShouldConsume,
                 ),
             )
@@ -66,12 +62,8 @@ object GachaDBManager {
 
     fun remove(targetBlock: Container) {
         val location = targetBlock.location
-        val worldName = location.world.name
-        val x = location.x
-        val y = location.y
-        val z = location.z
         val sql = "DELETE FROM $TABLE_NAME WHERE $WORLD_NAME_KEY = ? AND $X_KEY = ? AND $Y_KEY = ? AND $Z_KEY =?;"
-        dataBaseManager.executeUpdate(sql, listOf(worldName, x, y, z))
+        dataBaseManager.executeUpdate(sql, listOf(location.world.name, location.x, location.y, location.z))
     }
 
     fun loadDB() {
