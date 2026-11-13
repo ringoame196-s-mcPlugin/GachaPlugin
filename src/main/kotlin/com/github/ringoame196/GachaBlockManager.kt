@@ -73,9 +73,7 @@ object GachaBlockManager {
         if (gachaBlock.isShouldConsume) {
             removeGachaBlockItem(container, randomItem)
         }
-        val itemDisplay = EffectManager.summonRollDisplay(gachaBlock) ?: return
-        EffectManager.nextItem(itemDisplay, randomItem)
-        player.inventory.addItem(randomItem)
+        EffectManager.roll(player, gachaBlock, randomItem)
     }
 
     private fun isRoll(
