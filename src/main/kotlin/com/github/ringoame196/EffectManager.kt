@@ -22,9 +22,8 @@ object EffectManager {
     private const val INTERVAL_TICKS = 10L
     private const val REMOVE_DISPLAY_TIME = 20L
 
-    val EffectingBlocks = mutableSetOf<Location>()
-
-    fun isEffecting(location: Location): Boolean = EffectingBlocks.contains(location)
+    private val _effectingBlocks = mutableSetOf<Location>()
+    val effectingBlocks: Set<Location> get() = _effectingBlocks
 
     fun sendErrorMessage(
         player: Player,
@@ -63,7 +62,7 @@ object EffectManager {
             itemDisplay.remove()
             return
         }
-        EffectingBlocks.add(location)
+        _effectingBlocks.add(location)
 
         for (i in 0 until ROLL_COUNT) {
             val delay = i * INTERVAL_TICKS
@@ -99,7 +98,7 @@ object EffectManager {
                 if (itemDisplay.isValid) {
                     itemDisplay.remove()
                 }
-                EffectingBlocks.remove(location)
+                _effectingBlocks.remove(location)
             },
             removeDelay,
         )

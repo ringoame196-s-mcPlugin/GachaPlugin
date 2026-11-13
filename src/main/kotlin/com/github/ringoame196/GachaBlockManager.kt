@@ -53,7 +53,7 @@ object GachaBlockManager {
         val item = player.inventory.itemInMainHand
         val currentItem = gachaBlock.currencyItem
 
-        if (EffectManager.isEffecting(gachaBlock.container.location)) {
+        if (EffectManager.effectingBlocks.contains(gachaBlock.container.location)) {
             val message = "${ChatColor.RED}演出が終わるまでお待ちください"
             EffectManager.sendErrorMessage(player, message)
             return
