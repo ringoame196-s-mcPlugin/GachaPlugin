@@ -4,6 +4,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.entity.Display
 import org.bukkit.entity.ItemDisplay
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -105,7 +106,9 @@ object EffectManager {
                 .add(DISPLAY_ADD_X, DISPLAY_ADD_Y, DISPLAY_ADD_Z)
         val world = location.world ?: return null
         val itemDisplay =
-            world.spawn(location, ItemDisplay::class.java)
+            world.spawn(location, ItemDisplay::class.java) { display ->
+                display.billboard = Display.Billboard.CENTER // 常にプレイヤーの方を向く設定
+            }
         return itemDisplay
     }
 
