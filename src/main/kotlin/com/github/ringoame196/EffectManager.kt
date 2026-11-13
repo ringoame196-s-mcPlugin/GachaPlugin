@@ -99,20 +99,18 @@ object EffectManager {
         )
     }
 
-    fun summonRollDisplay(location: Location): ItemDisplay? {
+    private fun summonRollDisplay(location: Location): ItemDisplay? {
         val location =
             location
                 .clone()
                 .add(DISPLAY_ADD_X, DISPLAY_ADD_Y, DISPLAY_ADD_Z)
         val world = location.world ?: return null
         val itemDisplay =
-            world.spawn(location, ItemDisplay::class.java) { display ->
-                display.billboard = Display.Billboard.CENTER // 常にプレイヤーの方を向く設定
-            }
+            world.spawn(location, ItemDisplay::class.java)
         return itemDisplay
     }
 
-    fun nextDisplayItem(
+    private fun nextDisplayItem(
         itemDisplay: ItemDisplay,
         item: ItemStack,
     ) {
