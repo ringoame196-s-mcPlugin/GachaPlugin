@@ -3,11 +3,11 @@ package com.github.ringoame196.commands.subCommands
 import com.github.ringoame196.EffectManager
 import com.github.ringoame196.GachaBlock
 import com.github.ringoame196.GachaBlockManager
+import com.github.ringoame196.ItemManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 
 class SetSubCommand : SubCommand {
     override val name: String = "set"
@@ -52,7 +52,7 @@ class SetSubCommand : SubCommand {
         val currencyItem = gachaBlock.currencyItem
         val currencyItemInfo: String
         if (currencyItem != null) {
-            val currencyItemName = getCurrencyItemName(currencyItem)
+            val currencyItemName = ItemManager.getItemName(currencyItem)
             val currencyItemAmount = currencyItem.amount
             currencyItemInfo = "通貨アイテム：$currencyItemName 個数：$currencyItemAmount}"
         } else {
@@ -63,13 +63,6 @@ class SetSubCommand : SubCommand {
         val message = "${ChatColor.GOLD}ガチャ追加完了\n${ChatColor.AQUA}通貨アイテム：$currencyItemInfo\n消費：$isShouldConsume"
         EffectManager.sendSetMessage(player, message)
     }
-
-    private fun getCurrencyItemName(currencyItem: ItemStack): String =
-        if (currencyItem.itemMeta.hasDisplayName()) {
-            currencyItem.itemMeta.displayName
-        } else {
-            currencyItem.type.name
-        }
 
     override fun tabComplete(
         sender: CommandSender,
