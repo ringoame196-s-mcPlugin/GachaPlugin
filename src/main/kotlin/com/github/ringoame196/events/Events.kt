@@ -1,11 +1,11 @@
 package com.github.ringoame196.events
 
-import com.github.ringoame196.EffectManager
-import com.github.ringoame196.GachaBlock
-import com.github.ringoame196.GachaBlockManager
-import com.github.ringoame196.GachaBlockManager.isRoll
-import com.github.ringoame196.GachaponInventoryManager
-import com.github.ringoame196.ViewGachaponInventory
+import com.github.ringoame196.gui.ViewGachaponInventory
+import com.github.ringoame196.managers.EffectManager
+import com.github.ringoame196.managers.GachaBlockManager
+import com.github.ringoame196.managers.GachaBlockManager.isRoll
+import com.github.ringoame196.managers.GachaponInventoryManager
+import com.github.ringoame196.model.GachaBlock
 import org.bukkit.ChatColor
 import org.bukkit.block.Container
 import org.bukkit.entity.Player

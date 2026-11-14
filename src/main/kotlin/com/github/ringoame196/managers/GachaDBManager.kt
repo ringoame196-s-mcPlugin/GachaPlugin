@@ -1,5 +1,7 @@
-package com.github.ringoame196
+package com.github.ringoame196.managers
 
+import com.github.ringoame196.model.GachaBlock
+import com.github.ringoame196.util.ItemStackSerializer
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.block.Container

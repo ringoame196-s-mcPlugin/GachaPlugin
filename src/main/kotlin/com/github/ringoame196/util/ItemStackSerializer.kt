@@ -1,4 +1,4 @@
-package com.github.ringoame196
+package com.github.ringoame196.util
 
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.io.BukkitObjectInputStream

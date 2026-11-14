@@ -1,4 +1,4 @@
-package com.github.ringoame196
+package com.github.ringoame196.model
 
 import org.bukkit.block.Container
 import org.bukkit.inventory.ItemStack

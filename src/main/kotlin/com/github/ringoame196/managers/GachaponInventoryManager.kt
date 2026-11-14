@@ -1,5 +1,6 @@
-package com.github.ringoame196
+package com.github.ringoame196.managers
 
+import com.github.ringoame196.gui.GachaponInventory
 import org.bukkit.inventory.Inventory
 
 object GachaponInventoryManager {
