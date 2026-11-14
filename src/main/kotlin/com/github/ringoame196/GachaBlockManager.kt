@@ -2,6 +2,7 @@ package com.github.ringoame196
 
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.block.Barrel
 import org.bukkit.block.Container
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -37,11 +38,12 @@ object GachaBlockManager {
         }
 
         val state = targetBlock.state
-        if (state !is Container) {
-            val message = "${ChatColor.RED}コンテナブロックのみ追加可能です"
+        if (state !is Barrel) {
+            val message = "${ChatColor.RED}樽ブロックのみ指定可能です"
             EffectManager.sendErrorMessage(player, message)
             return null
         }
+
         return state
     }
 
