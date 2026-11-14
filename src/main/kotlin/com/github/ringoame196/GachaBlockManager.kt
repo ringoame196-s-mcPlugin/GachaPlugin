@@ -78,7 +78,7 @@ object GachaBlockManager {
         EffectManager.roll(player, gachaBlock, randomItem, plugin)
     }
 
-    private fun isRoll(
+    fun isRoll(
         item: ItemStack,
         currentItem: ItemStack?,
     ): Boolean {
