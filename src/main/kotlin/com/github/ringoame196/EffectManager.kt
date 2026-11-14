@@ -8,6 +8,7 @@ import org.bukkit.entity.Display
 import org.bukkit.entity.ItemDisplay
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.plugin.Plugin
 
 object EffectManager {
     private val ERROR_SOUND = Sound.BLOCK_NOTE_BLOCK_BELL
@@ -52,6 +53,7 @@ object EffectManager {
         player: Player,
         gachaBlock: GachaBlock,
         hitItem: ItemStack,
+        plugin: Plugin,
     ) {
         val container = gachaBlock.container
         val location = container.location
@@ -67,7 +69,7 @@ object EffectManager {
         for (i in 0 until ROLL_COUNT) {
             val delay = i * INTERVAL_TICKS
             Bukkit.getScheduler().runTaskLater(
-                Main.plugin,
+                plugin,
                 Runnable {
                     if (!itemDisplay.isValid) return@Runnable // 万が一消えていたら中断
                     val nextItem = itemList.random() ?: return@Runnable
@@ -93,7 +95,7 @@ object EffectManager {
 
         val removeDelay = finalDelay + REMOVE_DISPLAY_TIME
         Bukkit.getScheduler().runTaskLater(
-            Main.plugin,
+            plugin,
             Runnable {
                 if (itemDisplay.isValid) {
                     itemDisplay.remove()
