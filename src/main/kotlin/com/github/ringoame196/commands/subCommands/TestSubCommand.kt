@@ -1,5 +1,6 @@
 package com.github.ringoame196.commands.subCommands
 
+import com.github.ringoame196.EffectManager
 import com.github.ringoame196.GachaBlockManager
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
@@ -20,7 +21,14 @@ class TestSubCommand(
             return
         }
         val targetBlock = GachaBlockManager.getTargetBlock(sender) ?: return
-        val gachaBlock = GachaBlockManager.getGachaponBlock(targetBlock) ?: return
+        val gachaBlock = GachaBlockManager.getGachaponBlock(targetBlock)
+
+        if (gachaBlock == null) {
+            val message = "${ChatColor.RED}このブロックはガチャブロックではありません"
+            EffectManager.sendErrorMessage(sender, message)
+            return
+        }
+
         GachaBlockManager.roll(sender, gachaBlock, plugin)
     }
 }
