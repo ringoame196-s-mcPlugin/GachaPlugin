@@ -3,6 +3,7 @@ package com.github.ringoame196.events
 import com.github.ringoame196.EffectManager
 import com.github.ringoame196.GachaBlock
 import com.github.ringoame196.GachaBlockManager
+import com.github.ringoame196.GachaBlockManager.isRoll
 import com.github.ringoame196.GachaponInventoryManager
 import com.github.ringoame196.ViewGachaponInventory
 import org.bukkit.ChatColor
@@ -15,8 +16,11 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.plugin.Plugin
 
-class Events : Listener {
+class Events(
+    private val plugin: Plugin,
+) : Listener {
     @EventHandler
     fun onPlayerInteract(e: PlayerInteractEvent) {
         val player = e.player
@@ -29,7 +33,14 @@ class Events : Listener {
 
         e.isCancelled = true
         if (!player.isSneaking) {
-            GachaBlockManager.roll(player, gachaBlock)
+            val item = player.inventory.itemInMainHand
+            val currentItem = gachaBlock.currencyItem
+            if (!isRoll(item, currentItem)) {
+                val message = "${ChatColor.RED}消費アイテムが必要です"
+                EffectManager.sendErrorMessage(player, message)
+                return
+            }
+            GachaBlockManager.roll(player, gachaBlock, plugin)
         } else {
             if (gachaBlock.currencyItem == null) {
                 val message = "通貨アイテムは設定されていません"
