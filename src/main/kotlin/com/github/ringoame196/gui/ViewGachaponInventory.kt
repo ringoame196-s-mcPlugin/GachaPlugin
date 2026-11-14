@@ -1,5 +1,6 @@
-package com.github.ringoame196
+package com.github.ringoame196.gui
 
+import com.github.ringoame196.model.GachaBlock
 import org.bukkit.Bukkit
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory

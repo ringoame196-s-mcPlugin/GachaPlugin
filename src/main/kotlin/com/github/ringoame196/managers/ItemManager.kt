@@ -1,4 +1,4 @@
-package com.github.ringoame196
+package com.github.ringoame196.managers
 
 import org.bukkit.inventory.ItemStack
 

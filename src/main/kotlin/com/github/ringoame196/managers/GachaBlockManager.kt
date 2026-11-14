@@ -1,5 +1,6 @@
-package com.github.ringoame196
+package com.github.ringoame196.managers
 
+import com.github.ringoame196.model.GachaBlock
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.block.Barrel

@@ -1,6 +1,6 @@
 package com.github.ringoame196.commands.subCommands
 
-import com.github.ringoame196.GachaBlockManager
+import com.github.ringoame196.managers.GachaBlockManager
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player

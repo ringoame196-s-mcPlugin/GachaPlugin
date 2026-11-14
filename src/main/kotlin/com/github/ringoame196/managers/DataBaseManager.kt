@@ -1,4 +1,4 @@
-package com.github.ringoame196
+package com.github.ringoame196.managers
 
 import org.bukkit.plugin.Plugin
 import java.io.File
@@ -8,6 +8,7 @@ import java.sql.PreparedStatement
 import java.sql.SQLException
 import java.util.concurrent.Executors
 import kotlin.io.use
+import kotlin.use
 
 class DataBaseManager(
     private val plugin: Plugin,
