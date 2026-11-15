@@ -173,7 +173,7 @@ bukkit {
     apiVersion = "1." + minecraftVersion.split(".")[1]
     author = "ringoame196"
     website = "https://github.com/ringoame196-s-mcPlugin"
-    description = "ガチャポンプラグイン"
+    description = "GachaponPlugin"
 
     permissions {
         register("gacha_plugin.admin") {
@@ -184,9 +184,9 @@ bukkit {
 
     commands {
         register("gacha") {
-            description = "ガチャポンの管理するためのコマンド"
+            description = "Gachapon Manage Command"
             permission = "${project.name}.admin"
-            usage = "/gacha <add,remove.open> (<true,false>)"
+            usage = "/gacha <set,remove.open,reload_message,test> (<true,false>)"
 
         }
     }
