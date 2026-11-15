@@ -1,12 +1,12 @@
 package com.github.ringoame196.events
 
 import com.github.ringoame196.gui.ViewGachaponInventory
-import com.github.ringoame196.managers.EffectManager
 import com.github.ringoame196.managers.GachaBlockManager
 import com.github.ringoame196.managers.GachaBlockManager.isRoll
 import com.github.ringoame196.managers.GachaponInventoryManager
+import com.github.ringoame196.message.MessageKey
+import com.github.ringoame196.message.MessageManager
 import com.github.ringoame196.model.GachaBlock
-import org.bukkit.ChatColor
 import org.bukkit.block.Container
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -20,6 +20,7 @@ import org.bukkit.plugin.Plugin
 
 class Events(
     private val plugin: Plugin,
+    private val messageManager: MessageManager,
 ) : Listener {
     @EventHandler
     fun onPlayerInteract(e: PlayerInteractEvent) {
@@ -36,11 +37,10 @@ class Events(
             val item = player.inventory.itemInMainHand
             val currentItem = gachaBlock.currencyItem
             if (!isRoll(item, currentItem)) {
-                val message = "${ChatColor.RED}消費アイテムが必要です"
-                EffectManager.sendErrorMessage(player, message)
+                messageManager.sendMessage(player, MessageKey.REQUIRED_CURRENCY_ITEM)
                 return
             }
-            GachaBlockManager.roll(player, gachaBlock, plugin)
+            GachaBlockManager.roll(player, gachaBlock, plugin, messageManager)
         } else {
             if (gachaBlock.currencyItem == null) {
                 val message = "通貨アイテムは設定されていません"
@@ -81,8 +81,6 @@ class Events(
         val container = block.state as? Container ?: return
         if (!GachaBlockManager.gachaBlocks.contains(container)) return
         e.isCancelled = true
-
-        val message = "${ChatColor.RED}ガチャブロックを壊すことは阻止されています"
-        EffectManager.sendErrorMessage(player, message)
+        messageManager.sendMessage(player, MessageKey.NO_BREAK_GACHA_BLOCK)
     }
 }

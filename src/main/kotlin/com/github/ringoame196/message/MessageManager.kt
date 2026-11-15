@@ -1,7 +1,9 @@
 package com.github.ringoame196.message
 
 import org.bukkit.ChatColor
+import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.io.InputStreamReader
@@ -49,7 +51,12 @@ class MessageManager(
 
     fun contains(path: String): Boolean = messages.contains(path)
 
-    fun get(
+    private fun get(
+        key: MessageKey,
+        vararg placeholders: Pair<String, String>,
+    ): String = get(key.path, *placeholders)
+
+    private fun get(
         path: String,
         vararg placeholders: Pair<String, String>,
     ): String {
@@ -67,5 +74,19 @@ class MessageManager(
         }
 
         return ChatColor.translateAlternateColorCodes('&', text)
+    }
+
+    fun sendMessage(
+        sender: CommandSender,
+        key: MessageKey,
+        vararg placeholders: Pair<String, String>,
+    ) {
+        val message = get(key, *placeholders)
+        sender.sendMessage(message)
+
+        val sound = key.sound
+        if (sound != null && sender is Player) {
+            sender.playSound(sender, sound, 1f, 1f)
+        }
     }
 }

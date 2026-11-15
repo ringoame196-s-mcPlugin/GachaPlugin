@@ -1,8 +1,9 @@
 package com.github.ringoame196.managers
 
+import com.github.ringoame196.message.MessageKey
+import com.github.ringoame196.message.MessageManager
 import com.github.ringoame196.model.GachaBlock
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -14,8 +15,6 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 
 object EffectManager {
-    private val ERROR_SOUND = Sound.BLOCK_NOTE_BLOCK_BELL
-    private val SET_SOUND = Sound.BLOCK_ANVIL_USE
     private val ROLL_SOUND = Sound.BLOCK_DISPENSER_FAIL
     private val HIT_SOUND = Sound.BLOCK_ANVIL_USE
     private val HIT_PARTICLE = Particle.EXPLOSION_LARGE
@@ -34,34 +33,12 @@ object EffectManager {
     private val _effectingBlocks = mutableSetOf<Location>()
     val effectingBlocks: Set<Location> get() = _effectingBlocks
 
-    fun sendErrorMessage(
-        player: Player,
-        message: String,
-    ) {
-        sendMessage(player, message, ERROR_SOUND)
-    }
-
-    fun sendSetMessage(
-        player: Player,
-        message: String,
-    ) {
-        sendMessage(player, message, SET_SOUND)
-    }
-
-    private fun sendMessage(
-        player: Player,
-        message: String,
-        sound: Sound,
-    ) {
-        player.sendMessage(message)
-        player.playSound(player, sound, 1f, 1f)
-    }
-
     fun roll(
         player: Player,
         gachaBlock: GachaBlock,
         hitItem: ItemStack,
         plugin: Plugin,
+        messageManager: MessageManager,
     ) {
         val container = gachaBlock.container
         val location = container.location
@@ -94,7 +71,7 @@ object EffectManager {
             plugin,
             Runnable {
                 if (!itemDisplay.isValid) return@Runnable
-                hit(itemDisplay, hitItem, player, location)
+                hit(itemDisplay, hitItem, player, location, messageManager)
             },
             finalDelay,
         )
@@ -137,6 +114,7 @@ object EffectManager {
         hitItem: ItemStack,
         player: Player,
         location: Location,
+        messageManager: MessageManager,
     ) {
         nextDisplayItem(itemDisplay, hitItem)
         player.inventory.addItem(hitItem)
@@ -144,8 +122,6 @@ object EffectManager {
 
         val particleLocation = location.clone().add(HIT_PARTICLE_ADD_X, HIT_PARTICLE_ADD_Y, HIT_PARTICLE_ADD_Z)
         particleLocation.world.spawnParticle(HIT_PARTICLE, particleLocation, HIT_PARTICLE_COUNT)
-
-        val message = "${ChatColor.YELLOW}[結果] ${ItemManager.getItemName(hitItem)}"
-        player.sendMessage(message)
+        messageManager.sendMessage(player, MessageKey.RESULT, Pair("{hitItemInfo}", ItemManager.getItemName(hitItem)))
     }
 }

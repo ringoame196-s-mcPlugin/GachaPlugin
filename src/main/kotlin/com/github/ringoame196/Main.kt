@@ -19,21 +19,26 @@ class Main : JavaPlugin() {
         super.onEnable()
         logger.info("Enable ${description.name}")
 
-        @Suppress("UnusedPrivateMember")
         val messageManager = MessageManager(plugin)
         GachaDBManager.init(plugin)
         GachaDBManager.loadDB()
 
-        registerEvents(plugin)
-        registerCommands(plugin)
+        registerEvents(plugin, messageManager)
+        registerCommands(plugin, messageManager)
     }
 
-    private fun registerEvents(plugin: Plugin) {
-        server.pluginManager.registerEvents(Events(plugin), plugin)
+    private fun registerEvents(
+        plugin: Plugin,
+        messageManager: MessageManager,
+    ) {
+        server.pluginManager.registerEvents(Events(plugin, messageManager), plugin)
     }
 
-    private fun registerCommands(plugin: Plugin) {
-        getCommand("gacha")?.setExecutor(GachaCommand(plugin))
+    private fun registerCommands(
+        plugin: Plugin,
+        messageManager: MessageManager,
+    ) {
+        getCommand("gacha")?.setExecutor(GachaCommand(plugin, messageManager))
     }
 
     override fun onDisable() {
