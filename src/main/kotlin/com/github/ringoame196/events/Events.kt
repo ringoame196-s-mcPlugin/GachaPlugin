@@ -63,7 +63,7 @@ class Events(
 
     @EventHandler
     fun onInventoryClick(e: InventoryClickEvent) {
-        val inventory = e.clickedInventory ?: return
+        val inventory = e.inventory
         val gachaponInventory = GachaponInventoryManager.getGachaponInventory(inventory) ?: return
         gachaponInventory.onInventoryClickEvent(e)
     }
