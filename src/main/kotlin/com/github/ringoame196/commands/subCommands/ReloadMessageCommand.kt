@@ -13,7 +13,7 @@ class ReloadMessageCommand(
         sender: CommandSender,
         args: Array<out String>,
     ) {
-        messageManager.sendMessage(sender, MessageKey.RELOAD_MESSAGE)
         messageManager.reload()
+        messageManager.sendMessage(sender, MessageKey.RELOAD_MESSAGE)
     }
 }
