@@ -7,6 +7,11 @@
 
 A simple and feature-rich Minecraft plugin that allows you to set up and manage barrels as custom gacha blocks.
 
+## 📋 Requirements
+
+* **Minecraft / Server**: Paper / Spigot `1.20.1`
+* **Java**: `Java 17`
+
 ## ✨ Features
 
 * **Turn Barrels into Gacha Blocks**: Easily register existing barrels as gacha blocks using simple commands.
