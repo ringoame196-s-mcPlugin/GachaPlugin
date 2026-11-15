@@ -17,27 +17,32 @@ class Main : JavaPlugin() {
     override fun onEnable() {
         plugin = this
         super.onEnable()
-        logger.info("${description.name} が有効化されました！")
+        logger.info("Enable ${description.name}")
 
-        @Suppress("UnusedPrivateMember")
         val messageManager = MessageManager(plugin)
         GachaDBManager.init(plugin)
         GachaDBManager.loadDB()
 
-        registerEvents(plugin)
-        registerCommands(plugin)
+        registerEvents(plugin, messageManager)
+        registerCommands(plugin, messageManager)
     }
 
-    private fun registerEvents(plugin: Plugin) {
-        server.pluginManager.registerEvents(Events(plugin), plugin)
+    private fun registerEvents(
+        plugin: Plugin,
+        messageManager: MessageManager,
+    ) {
+        server.pluginManager.registerEvents(Events(plugin, messageManager), plugin)
     }
 
-    private fun registerCommands(plugin: Plugin) {
-        getCommand("gacha")?.setExecutor(GachaCommand(plugin))
+    private fun registerCommands(
+        plugin: Plugin,
+        messageManager: MessageManager,
+    ) {
+        getCommand("gacha")?.setExecutor(GachaCommand(plugin, messageManager))
     }
 
     override fun onDisable() {
         // プラグイン無効化時の処理
-        logger.info("${description.name} が無効化されました。")
+        logger.info("Disable ${description.name}")
     }
 }

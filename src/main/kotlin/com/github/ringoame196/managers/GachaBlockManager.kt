@@ -1,7 +1,8 @@
 package com.github.ringoame196.managers
 
+import com.github.ringoame196.message.MessageKey
+import com.github.ringoame196.message.MessageManager
 import com.github.ringoame196.model.GachaBlock
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.block.Barrel
 import org.bukkit.block.Container
@@ -29,19 +30,20 @@ object GachaBlockManager {
         GachaDBManager.remove(targetBlock)
     }
 
-    fun getTargetBlock(player: Player): Container? {
+    fun getTargetBlock(
+        player: Player,
+        messageManager: MessageManager,
+    ): Container? {
         val targetBlock = player.getTargetBlockExact(MAX_DISTANCE)
 
         if (targetBlock == null) {
-            val message = "${ChatColor.RED}ブロックを指定してください"
-            EffectManager.sendErrorMessage(player, message)
+            messageManager.sendMessage(player, MessageKey.NO_TARGET_BLOCK)
             return null
         }
 
         val state = targetBlock.state
         if (state !is Barrel) {
-            val message = "${ChatColor.RED}樽ブロックのみ指定可能です"
-            EffectManager.sendErrorMessage(player, message)
+            messageManager.sendMessage(player, MessageKey.NO_BARREL)
             return null
         }
 
@@ -54,31 +56,30 @@ object GachaBlockManager {
         player: Player,
         gachaBlock: GachaBlock,
         plugin: Plugin,
+        messageManager: MessageManager,
     ) {
         val item = player.inventory.itemInMainHand
         val currentItem = gachaBlock.currencyItem
 
         if (EffectManager.effectingBlocks.contains(gachaBlock.container.location)) {
-            val message = "${ChatColor.RED}演出が終わるまでお待ちください"
-            EffectManager.sendErrorMessage(player, message)
+            messageManager.sendMessage(player, MessageKey.WAIT_ROLL)
             return
         }
 
         val container = gachaBlock.container
-        val randomItem = getRandomItem(container)
+        val hitItem = getRandomItem(container)
 
-        if (randomItem == null) {
-            val message = "${ChatColor.RED}出せるアイテムがありませんでした"
-            EffectManager.sendErrorMessage(player, message)
+        if (hitItem == null) {
+            messageManager.sendMessage(player, MessageKey.NO_HIT_ITEM)
             return
         }
 
         removeCurryItem(player, currentItem, item)
 
         if (gachaBlock.isShouldConsume) {
-            removeGachaBlockItem(container, randomItem)
+            removeGachaBlockItem(container, hitItem)
         }
-        EffectManager.roll(player, gachaBlock, randomItem, plugin)
+        EffectManager.roll(player, gachaBlock, hitItem, plugin, messageManager)
     }
 
     fun isRoll(

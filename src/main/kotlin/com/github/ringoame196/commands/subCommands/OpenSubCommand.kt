@@ -1,11 +1,14 @@
 package com.github.ringoame196.commands.subCommands
 
 import com.github.ringoame196.managers.GachaBlockManager
-import org.bukkit.ChatColor
+import com.github.ringoame196.message.MessageKey
+import com.github.ringoame196.message.MessageManager
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class OpenSubCommand : SubCommand {
+class OpenSubCommand(
+    private val messageManager: MessageManager,
+) : SubCommand {
     override val name: String = "open"
 
     override fun execute(
@@ -13,10 +16,10 @@ class OpenSubCommand : SubCommand {
         args: Array<out String>,
     ) {
         if (sender !is Player) {
-            sender.sendMessage("${ChatColor.RED}このコマンドはプレイヤーのみ実行可能です")
+            messageManager.sendMessage(sender, MessageKey.NO_PLAYER_SENDER)
             return
         }
-        val targetBlock = GachaBlockManager.getTargetBlock(sender) ?: return
+        val targetBlock = GachaBlockManager.getTargetBlock(sender, messageManager) ?: return
         sender.openInventory(targetBlock.inventory)
     }
 }

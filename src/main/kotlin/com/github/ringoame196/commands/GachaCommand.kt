@@ -1,23 +1,27 @@
 package com.github.ringoame196.commands
 
 import com.github.ringoame196.commands.subCommands.OpenSubCommand
+import com.github.ringoame196.commands.subCommands.ReloadMessageCommand
 import com.github.ringoame196.commands.subCommands.RemoveSubCommand
 import com.github.ringoame196.commands.subCommands.SetSubCommand
 import com.github.ringoame196.commands.subCommands.SubCommand
 import com.github.ringoame196.commands.subCommands.TestSubCommand
+import com.github.ringoame196.message.MessageManager
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.plugin.Plugin
 
 class GachaCommand(
     plugin: Plugin,
+    messageManager: MessageManager,
 ) : BaseCommand() {
     override val subCommands: Map<String, SubCommand> =
         listOf(
-            SetSubCommand(),
-            RemoveSubCommand(),
-            OpenSubCommand(),
-            TestSubCommand(plugin),
+            SetSubCommand(messageManager),
+            RemoveSubCommand(messageManager),
+            OpenSubCommand(messageManager),
+            TestSubCommand(plugin, messageManager),
+            ReloadMessageCommand(messageManager),
         ).associateBy {
             it.name
         }

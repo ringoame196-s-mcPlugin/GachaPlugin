@@ -1,15 +1,17 @@
 package com.github.ringoame196.commands.subCommands
 
-import com.github.ringoame196.managers.EffectManager
 import com.github.ringoame196.managers.GachaBlockManager
 import com.github.ringoame196.managers.ItemManager
+import com.github.ringoame196.message.MessageKey
+import com.github.ringoame196.message.MessageManager
 import com.github.ringoame196.model.GachaBlock
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class SetSubCommand : SubCommand {
+class SetSubCommand(
+    private val messageManager: MessageManager,
+) : SubCommand {
     override val name: String = "set"
 
     companion object {
@@ -22,15 +24,15 @@ class SetSubCommand : SubCommand {
         args: Array<out String>,
     ) {
         if (sender !is Player) {
-            sender.sendMessage("${ChatColor.RED}このコマンドはプレイヤーのみ実行可能です")
+            messageManager.sendMessage(sender, MessageKey.NO_PLAYER_SENDER)
             return
         }
         val item = sender.inventory.itemInMainHand
-        val targetBlock = GachaBlockManager.getTargetBlock(sender) ?: return
+        val targetBlock = GachaBlockManager.getTargetBlock(sender, messageManager) ?: return
 
         if (GachaBlockManager.gachaBlocks.contains(targetBlock)) {
-            val message = "${ChatColor.RED}既に追加済です"
-            EffectManager.sendErrorMessage(sender, message)
+            messageManager.sendMessage(sender, MessageKey.REMOVE_GACHA_BLOCK)
+            messageManager.sendMessage(sender, MessageKey.ALREADY_REGISTERED)
             return
         }
 
@@ -60,8 +62,12 @@ class SetSubCommand : SubCommand {
         }
         val isShouldConsume = gachaBlock.isShouldConsume
 
-        val message = "${ChatColor.GOLD}ガチャ追加完了\n${ChatColor.AQUA}通貨アイテム：$currencyItemInfo\n消費：$isShouldConsume"
-        EffectManager.sendSetMessage(player, message)
+        messageManager.sendMessage(
+            player,
+            MessageKey.ADD_GACHA_BLOCK,
+            Pair("{currencyItemInfo}", currencyItemInfo),
+            Pair("{isShouldConsume}", isShouldConsume.toString()),
+        )
     }
 
     override fun tabComplete(
