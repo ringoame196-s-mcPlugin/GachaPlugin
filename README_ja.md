@@ -3,6 +3,8 @@
 
 # 🎁 GachaPlugin
 
+<img src="imgs/movie.gif" width="480" alt="サンプル動画"> 
+
 樽（Barrel）をオリジナルのガチャブロックとして設置・管理できる、シンプルで高機能なMinecraftプラグインです。
 
 ## ✨ 主な機能

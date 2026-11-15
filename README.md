@@ -3,6 +3,8 @@
 
 # 🎁 GachaPlugin
 
+<img src="imgs/movie.gif" width="480" alt="sample Movie"> 
+
 A simple and feature-rich Minecraft plugin that allows you to set up and manage barrels as custom gacha blocks.
 
 ## ✨ Features
