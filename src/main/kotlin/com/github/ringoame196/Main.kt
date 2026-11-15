@@ -17,7 +17,7 @@ class Main : JavaPlugin() {
     override fun onEnable() {
         plugin = this
         super.onEnable()
-        logger.info("${description.name} が有効化されました！")
+        logger.info("Enable ${description.name}")
 
         @Suppress("UnusedPrivateMember")
         val messageManager = MessageManager(plugin)
@@ -38,6 +38,6 @@ class Main : JavaPlugin() {
 
     override fun onDisable() {
         // プラグイン無効化時の処理
-        logger.info("${description.name} が無効化されました。")
+        logger.info("Disable ${description.name}")
     }
 }
